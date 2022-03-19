@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { StyleSheet, Button, View, SafeAreaView, Image, Text, ScrollView } from 'react-native';
+import { useDispatch  } from 'react-redux';
 
 const Separator = () => (
     <View style={styles.separator} />
@@ -9,6 +10,7 @@ const Home = ({ navigation }) => {
 
     const [loading, setLoading] = useState(false)
     const [product, setProduct] = useState([])
+    const dispatch = useDispatch()
 
     useEffect(() => {
 
@@ -42,6 +44,19 @@ const Home = ({ navigation }) => {
 
     }, [])
 
+    const addToCart = (id) => {
+        // console.log(id)
+        const addedProduct = product.find(items =>items.id === id)
+        // console.log(addedProduct);
+        dispatch({
+            type: "ADDPRODUCTS",
+            payload: addedProduct
+        })
+    }
+
+    // const totalProduct = useSelector((state)=>state.products)
+    // console.log(totalProduct);
+
     if (!loading) {
         return <Text style={styles.title}>Loading.....</Text>
     }
@@ -52,7 +67,7 @@ const Home = ({ navigation }) => {
             <ScrollView>
 
                 <Button
-                    title="cart 1"
+                    title="cart"
                     onPress={() => navigation.navigate('Cart')}
                 />
                 <Separator />
@@ -71,7 +86,7 @@ const Home = ({ navigation }) => {
                         <Text style={styles.price}>$ {items.price}</Text>
                         <Button
                             title="Add To Cart"
-                            onPress={() => navigation.navigate('Cart')}
+                            onPress={() => addToCart(items.id)}
                         />
 
                     </View>
